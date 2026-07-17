@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2 } from "lucide-react";
+import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2, Download } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { getActiveTest, submitAttempt } from "@/lib/practice.functions";
 
@@ -21,17 +21,8 @@ type LoaderData = Awaited<ReturnType<typeof getActiveTest>>;
 type Question = NonNullable<LoaderData>["questions"][number];
 type Choice = "A" | "B" | "C" | "D";
 
-interface Result {
-  attemptId: string;
-  score: number;
-  total: number;
-  percentage: number;
-  timeRemainingSeconds: number;
-  correct: number;
-  incorrect: number;
-  unanswered: number;
-  flaggedCount: number;
-}
+type Result = Awaited<ReturnType<typeof submitAttempt>>;
+
 
 const STORAGE_KEY = "sat-practice-state-v1";
 
@@ -135,7 +126,7 @@ function TestRunner({
   const [remaining, setRemaining] = useState(durationSeconds);
   const [submitOpen, setSubmitOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [tutorEmail, setTutorEmail] = useState("");
+  const [studentName, setStudentName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const warned5 = useRef(false);
@@ -166,7 +157,7 @@ function TestRunner({
   }, [testId, answers, flagged]);
 
   const handleSubmit = useCallback(
-    async (email: string, auto = false) => {
+    async (name: string, auto = false) => {
       if (submittedRef.current) return;
       submittedRef.current = true;
       setSubmitting(true);
@@ -174,7 +165,7 @@ function TestRunner({
         const res = await submit({
           data: {
             testId,
-            tutorEmail: email,
+            studentName: name,
             answers,
             flagged: [...flagged],
             timeRemainingSeconds: Math.max(0, remaining),
@@ -209,8 +200,7 @@ function TestRunner({
         }
         if (next <= 0) {
           clearInterval(t);
-          const email = tutorEmail.trim() || "no-tutor-email@sat-prep-studio.local";
-          void handleSubmit(email, true);
+          void handleSubmit(studentName.trim(), true);
           toast.error("Time has expired. Your test has been submitted.");
           return 0;
         }
@@ -218,7 +208,7 @@ function TestRunner({
       });
     }, 1000);
     return () => clearInterval(t);
-  }, [result, tutorEmail, handleSubmit]);
+  }, [result, studentName, handleSubmit]);
 
   // Beforeunload guard
   useEffect(() => {
@@ -234,7 +224,7 @@ function TestRunner({
   const q = questions[index];
   const answered = Object.keys(answers).length;
   const progressPct = Math.round(((index + 1) / questions.length) * 100);
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(tutorEmail.trim());
+
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -384,16 +374,16 @@ function TestRunner({
         <Modal onClose={() => !submitting && setSubmitOpen(false)}>
           <h2 className="text-xl font-semibold text-foreground">Submit your practice test</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Enter your tutor's email so we can send them your detailed results.
+            Add your name so it appears on your downloadable PDF report (optional).
           </p>
           <div className="mt-6 grid gap-2">
-            <label className="text-xs font-medium text-foreground">Tutor Email Address</label>
+            <label className="text-xs font-medium text-foreground">Your Name (optional)</label>
             <input
-              type="email"
-              autoComplete="email"
-              placeholder="tutor@example.com"
-              value={tutorEmail}
-              onChange={(e) => setTutorEmail(e.target.value)}
+              type="text"
+              autoComplete="name"
+              placeholder="Jane Doe"
+              value={studentName}
+              onChange={(e) => setStudentName(e.target.value)}
               className="rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none ring-primary/30 transition focus:border-primary focus:ring-2"
             />
           </div>
@@ -411,7 +401,7 @@ function TestRunner({
               Keep working
             </button>
             <button
-              disabled={!emailValid || submitting}
+              disabled={submitting}
               onClick={() => setConfirmOpen(true)}
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-40"
             >
@@ -420,6 +410,7 @@ function TestRunner({
           </div>
         </Modal>
       )}
+
 
       {confirmOpen && !result && (
         <Modal onClose={() => !submitting && setConfirmOpen(false)}>
@@ -434,7 +425,7 @@ function TestRunner({
               Cancel
             </button>
             <button
-              onClick={() => handleSubmit(tutorEmail.trim())}
+              onClick={() => handleSubmit(studentName.trim())}
               disabled={submitting}
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60"
             >
@@ -530,6 +521,20 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =
 function ResultModal({ result, onClose }: { result: Result; onClose: () => void }) {
   const m = Math.floor(result.timeRemainingSeconds / 60);
   const s = result.timeRemainingSeconds % 60;
+  const [downloading, setDownloading] = useState(false);
+
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const { generateResultsPdf } = await import("@/lib/results-pdf");
+      generateResultsPdf(result);
+    } catch (e) {
+      toast.error((e as Error).message || "Failed to generate PDF");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/50 p-4 backdrop-blur-sm animate-in fade-in">
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-elevated animate-in zoom-in-95">
@@ -537,7 +542,7 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
           <CheckCircle2 className="h-8 w-8" />
         </div>
         <h2 className="mt-4 text-2xl font-semibold text-foreground">Practice Test Complete!</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Your tutor has been emailed a full breakdown.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Download your full breakdown as a PDF report below.</p>
         <div className="mt-6 rounded-2xl bg-primary-soft p-6">
           <div className="text-xs font-medium uppercase tracking-wider text-accent-foreground">You scored</div>
           <div className="mt-1 text-5xl font-bold text-foreground">
@@ -555,8 +560,16 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
           Time remaining: {String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
         </div>
         <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60"
+        >
+          {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading ? "Preparing PDF…" : "Download PDF Report"}
+        </button>
+        <button
           onClick={onClose}
-          className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-soft hover:bg-primary/90"
+          className="mt-2 inline-flex w-full items-center justify-center rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
         >
           Close
         </button>
@@ -564,3 +577,4 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
     </div>
   );
 }
+
