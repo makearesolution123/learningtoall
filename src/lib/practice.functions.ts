@@ -49,7 +49,7 @@ export const getActiveTest = createServerFn({ method: "GET" }).handler(async () 
 
 const submitSchema = z.object({
   testId: z.string().uuid(),
-  tutorEmail: z.string().trim().email().max(255),
+  studentName: z.string().trim().max(120).optional().default(""),
   answers: z.record(z.string(), z.enum(["A", "B", "C", "D"])),
   flagged: z.array(z.string()),
   timeRemainingSeconds: z.number().int().min(0),
@@ -77,11 +77,16 @@ export const submitAttempt = createServerFn({ method: "POST" })
       const student = data.answers[q.id] ?? null;
       const isCorrect = student === q.correct_answer;
       if (isCorrect) correct++;
+      const choices: Record<"A" | "B" | "C" | "D", string> = {
+        A: q.choice_a, B: q.choice_b, C: q.choice_c, D: q.choice_d,
+      };
       return {
         position: q.position,
         prompt: q.prompt,
         studentAnswer: student,
-        correctAnswer: q.correct_answer,
+        studentAnswerText: student ? choices[student as "A"] : null,
+        correctAnswer: q.correct_answer as "A" | "B" | "C" | "D",
+        correctAnswerText: choices[q.correct_answer as "A"],
         isCorrect,
         flagged: data.flagged.includes(q.id),
       };
@@ -95,7 +100,7 @@ export const submitAttempt = createServerFn({ method: "POST" })
       .from("test_attempts")
       .insert({
         test_id: data.testId,
-        tutor_email: data.tutorEmail,
+        tutor_email: data.studentName || "anonymous",
         submitted_at: new Date().toISOString(),
         score: correct,
         total,
@@ -108,27 +113,10 @@ export const submitAttempt = createServerFn({ method: "POST" })
       .single();
     if (ae) throw new Error(ae.message);
 
-    // Fire-and-log email
-    try {
-      const { sendResultsEmail } = await import("./email.server");
-      await sendResultsEmail({
-        attemptId: attempt.id,
-        tutorEmail: data.tutorEmail,
-        testTitle: test.title,
-        score: correct,
-        total,
-        percentage,
-        timeRemainingSeconds: data.timeRemainingSeconds,
-        breakdown,
-        incorrect,
-        unanswered,
-      });
-    } catch (e) {
-      console.error("Email send failed:", e);
-    }
-
     return {
       attemptId: attempt.id,
+      testTitle: test.title,
+      studentName: data.studentName || "",
       score: correct,
       total,
       percentage,
@@ -137,5 +125,8 @@ export const submitAttempt = createServerFn({ method: "POST" })
       incorrect,
       unanswered,
       flaggedCount: data.flagged.length,
+      autoSubmitted: data.autoSubmitted,
+      breakdown,
     };
   });
+
