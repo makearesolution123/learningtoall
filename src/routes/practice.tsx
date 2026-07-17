@@ -37,7 +37,8 @@ const STORAGE_KEY = "sat-practice-state-v1";
 
 function PracticePage() {
   const data = Route.useLoaderData();
-  const [phase, setPhase] = useState<"intro" | "test" | "review" | "done">("intro");
+  const navigate = useNavigate();
+  const [phase, setPhase] = useState<"intro" | "test">("intro");
 
   if (!data) {
     return (
@@ -61,7 +62,7 @@ function PracticePage() {
           testId={data.test.id}
           durationSeconds={data.test.duration_seconds}
           questions={data.questions}
-          onDone={() => setPhase("done")}
+          onDone={() => navigate({ to: "/" })}
         />
       )}
     </div>
