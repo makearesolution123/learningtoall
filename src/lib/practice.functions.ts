@@ -35,7 +35,16 @@ export const getActiveTest = createServerFn({ method: "GET" }).handler(async () 
     .eq("test_id", test.id)
     .order("position", { ascending: true });
   if (qe) throw new Error(qe.message);
-  return { test, questions: questions ?? [] };
+  const safe = (questions ?? []).map((q) => ({
+    id: q.id as string,
+    position: q.position as number,
+    prompt: q.prompt as string,
+    choice_a: q.choice_a as string,
+    choice_b: q.choice_b as string,
+    choice_c: q.choice_c as string,
+    choice_d: q.choice_d as string,
+  }));
+  return { test, questions: safe };
 });
 
 const submitSchema = z.object({
