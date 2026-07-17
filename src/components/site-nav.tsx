@@ -11,7 +11,7 @@ export function SiteNav() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-soft transition-transform group-hover:scale-105">
             <GraduationCap className="h-5 w-5" />
           </span>
-          <span className="text-base font-semibold tracking-tight text-foreground">SAT Prep Studio</span>
+          <span className="text-base font-semibold tracking-tight text-foreground whitespace-pre-line">Learning to All Tutoring{"\n"}</span>
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex">
