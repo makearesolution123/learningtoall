@@ -126,7 +126,7 @@ function TestRunner({
   const [remaining, setRemaining] = useState(durationSeconds);
   const [submitOpen, setSubmitOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [tutorEmail, setTutorEmail] = useState("");
+  const [studentName, setStudentName] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
   const warned5 = useRef(false);
@@ -157,7 +157,7 @@ function TestRunner({
   }, [testId, answers, flagged]);
 
   const handleSubmit = useCallback(
-    async (email: string, auto = false) => {
+    async (name: string, auto = false) => {
       if (submittedRef.current) return;
       submittedRef.current = true;
       setSubmitting(true);
@@ -165,7 +165,7 @@ function TestRunner({
         const res = await submit({
           data: {
             testId,
-            tutorEmail: email,
+            studentName: name,
             answers,
             flagged: [...flagged],
             timeRemainingSeconds: Math.max(0, remaining),
@@ -200,8 +200,7 @@ function TestRunner({
         }
         if (next <= 0) {
           clearInterval(t);
-          const email = tutorEmail.trim() || "no-tutor-email@sat-prep-studio.local";
-          void handleSubmit(email, true);
+          void handleSubmit(studentName.trim(), true);
           toast.error("Time has expired. Your test has been submitted.");
           return 0;
         }
@@ -209,7 +208,7 @@ function TestRunner({
       });
     }, 1000);
     return () => clearInterval(t);
-  }, [result, tutorEmail, handleSubmit]);
+  }, [result, studentName, handleSubmit]);
 
   // Beforeunload guard
   useEffect(() => {
@@ -225,7 +224,7 @@ function TestRunner({
   const q = questions[index];
   const answered = Object.keys(answers).length;
   const progressPct = Math.round(((index + 1) / questions.length) * 100);
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(tutorEmail.trim());
+
 
   return (
     <div className="flex min-h-dvh flex-col">
