@@ -14,7 +14,177 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      email_logs: {
+        Row: {
+          attempt_id: string | null
+          created_at: string
+          error: string | null
+          id: string
+          recipient: string
+          status: string
+          subject: string
+        }
+        Insert: {
+          attempt_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          recipient: string
+          status: string
+          subject: string
+        }
+        Update: {
+          attempt_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          recipient?: string
+          status?: string
+          subject?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_logs_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "test_attempts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions: {
+        Row: {
+          choice_a: string
+          choice_b: string
+          choice_c: string
+          choice_d: string
+          correct_answer: string
+          created_at: string
+          id: string
+          position: number
+          prompt: string
+          test_id: string
+          updated_at: string
+        }
+        Insert: {
+          choice_a: string
+          choice_b: string
+          choice_c: string
+          choice_d: string
+          correct_answer: string
+          created_at?: string
+          id?: string
+          position: number
+          prompt: string
+          test_id: string
+          updated_at?: string
+        }
+        Update: {
+          choice_a?: string
+          choice_b?: string
+          choice_c?: string
+          choice_d?: string
+          correct_answer?: string
+          created_at?: string
+          id?: string
+          position?: number
+          prompt?: string
+          test_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_attempts: {
+        Row: {
+          answers: Json
+          auto_submitted: boolean
+          created_at: string
+          flagged: Json
+          id: string
+          score: number | null
+          started_at: string
+          submitted_at: string | null
+          test_id: string
+          time_remaining_seconds: number | null
+          total: number | null
+          tutor_email: string
+        }
+        Insert: {
+          answers?: Json
+          auto_submitted?: boolean
+          created_at?: string
+          flagged?: Json
+          id?: string
+          score?: number | null
+          started_at?: string
+          submitted_at?: string | null
+          test_id: string
+          time_remaining_seconds?: number | null
+          total?: number | null
+          tutor_email: string
+        }
+        Update: {
+          answers?: Json
+          auto_submitted?: boolean
+          created_at?: string
+          flagged?: Json
+          id?: string
+          score?: number | null
+          started_at?: string
+          submitted_at?: string | null
+          test_id?: string
+          time_remaining_seconds?: number | null
+          total?: number | null
+          tutor_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_attempts_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          created_at: string
+          description: string | null
+          duration_seconds: number
+          id: string
+          is_active: boolean
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number
+          id?: string
+          is_active?: boolean
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number
+          id?: string
+          is_active?: boolean
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
