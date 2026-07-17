@@ -21,17 +21,8 @@ type LoaderData = Awaited<ReturnType<typeof getActiveTest>>;
 type Question = NonNullable<LoaderData>["questions"][number];
 type Choice = "A" | "B" | "C" | "D";
 
-interface Result {
-  attemptId: string;
-  score: number;
-  total: number;
-  percentage: number;
-  timeRemainingSeconds: number;
-  correct: number;
-  incorrect: number;
-  unanswered: number;
-  flaggedCount: number;
-}
+type Result = Awaited<ReturnType<typeof submitAttempt>>;
+
 
 const STORAGE_KEY = "sat-practice-state-v1";
 
