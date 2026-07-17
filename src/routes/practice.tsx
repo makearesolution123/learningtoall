@@ -374,16 +374,16 @@ function TestRunner({
         <Modal onClose={() => !submitting && setSubmitOpen(false)}>
           <h2 className="text-xl font-semibold text-foreground">Submit your practice test</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Enter your tutor's email so we can send them your detailed results.
+            Add your name so it appears on your downloadable PDF report (optional).
           </p>
           <div className="mt-6 grid gap-2">
-            <label className="text-xs font-medium text-foreground">Tutor Email Address</label>
+            <label className="text-xs font-medium text-foreground">Your Name (optional)</label>
             <input
-              type="email"
-              autoComplete="email"
-              placeholder="tutor@example.com"
-              value={tutorEmail}
-              onChange={(e) => setTutorEmail(e.target.value)}
+              type="text"
+              autoComplete="name"
+              placeholder="Jane Doe"
+              value={studentName}
+              onChange={(e) => setStudentName(e.target.value)}
               className="rounded-xl border border-input bg-background px-4 py-2.5 text-sm outline-none ring-primary/30 transition focus:border-primary focus:ring-2"
             />
           </div>
@@ -401,7 +401,7 @@ function TestRunner({
               Keep working
             </button>
             <button
-              disabled={!emailValid || submitting}
+              disabled={submitting}
               onClick={() => setConfirmOpen(true)}
               className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-40"
             >
@@ -410,6 +410,7 @@ function TestRunner({
           </div>
         </Modal>
       )}
+
 
       {confirmOpen && !result && (
         <Modal onClose={() => !submitting && setConfirmOpen(false)}>
