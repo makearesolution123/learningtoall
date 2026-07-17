@@ -187,7 +187,50 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_questions: {
+        Row: {
+          choice_a: string | null
+          choice_b: string | null
+          choice_c: string | null
+          choice_d: string | null
+          created_at: string | null
+          id: string | null
+          position: number | null
+          prompt: string | null
+          test_id: string | null
+        }
+        Insert: {
+          choice_a?: string | null
+          choice_b?: string | null
+          choice_c?: string | null
+          choice_d?: string | null
+          created_at?: string | null
+          id?: string | null
+          position?: number | null
+          prompt?: string | null
+          test_id?: string | null
+        }
+        Update: {
+          choice_a?: string | null
+          choice_b?: string | null
+          choice_c?: string | null
+          choice_d?: string | null
+          created_at?: string | null
+          id?: string | null
+          position?: number | null
+          prompt?: string | null
+          test_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       [_ in never]: never
