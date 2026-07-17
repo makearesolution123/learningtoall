@@ -313,7 +313,7 @@ function NewQuestion({
 }: {
   onCreate: (u: { prompt: string; choiceA: string; choiceB: string; choiceC: string; choiceD: string; correctAnswer: "A" | "B" | "C" | "D" }) => Promise<void>;
 }) {
-  const [f, setF] = useState({ prompt: "", choiceA: "", choiceB: "", choiceC: "", choiceD: "", correctAnswer: "A" as const });
+  const [f, setF] = useState<{ prompt: string; choiceA: string; choiceB: string; choiceC: string; choiceD: string; correctAnswer: "A" | "B" | "C" | "D" }>({ prompt: "", choiceA: "", choiceB: "", choiceC: "", choiceD: "", correctAnswer: "A" });
   const valid = f.prompt && f.choiceA && f.choiceB && f.choiceC && f.choiceD;
   return (
     <div className="mt-6 rounded-xl border border-dashed border-border p-4">
