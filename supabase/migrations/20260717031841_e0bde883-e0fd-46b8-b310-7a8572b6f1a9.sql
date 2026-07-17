@@ -1,0 +1,1 @@
+ALTER VIEW public.public_questions SET (security_invoker = true);
