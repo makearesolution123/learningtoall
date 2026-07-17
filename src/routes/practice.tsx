@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2 } from "lucide-react";
+import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2, Download } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { getActiveTest, submitAttempt } from "@/lib/practice.functions";
 
