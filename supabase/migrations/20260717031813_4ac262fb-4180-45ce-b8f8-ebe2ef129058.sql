@@ -74,7 +74,7 @@ CREATE POLICY "service manages email logs" ON public.email_logs FOR ALL TO servi
 
 -- Seed default test + 15 questions
 INSERT INTO public.tests (id, title, description, duration_seconds)
-VALUES ('00000000-0000-0000-0000-000000000001', 'SAT Practice Test 1', 'A 15-question sample SAT-style practice test.', 1200);
+VALUES ('00000000-0000-0000-0000-000000000001', 'SAT Practice Test 1', 'Algebra Practice Test 1', 1200);
 
 INSERT INTO public.questions (test_id, position, prompt, choice_a, choice_b, choice_c, choice_d, correct_answer) VALUES
 ('00000000-0000-0000-0000-000000000001', 1, 'Maria rents a kayak at a cost of $8 per hour plus a onetime equipment fee of $12. Which equation represents the total cost c, in dollars, to rent the kayak for h hours?', 'c = 8(h + 12)', 'c = 12(h + 8)', 'c = 8h + 12', 'c = 12h + 8', 'C'),
