@@ -521,6 +521,20 @@ function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =
 function ResultModal({ result, onClose }: { result: Result; onClose: () => void }) {
   const m = Math.floor(result.timeRemainingSeconds / 60);
   const s = result.timeRemainingSeconds % 60;
+  const [downloading, setDownloading] = useState(false);
+
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      const { generateResultsPdf } = await import("@/lib/results-pdf");
+      generateResultsPdf(result);
+    } catch (e) {
+      toast.error((e as Error).message || "Failed to generate PDF");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/50 p-4 backdrop-blur-sm animate-in fade-in">
       <div className="w-full max-w-md rounded-3xl border border-border bg-card p-8 text-center shadow-elevated animate-in zoom-in-95">
@@ -528,7 +542,7 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
           <CheckCircle2 className="h-8 w-8" />
         </div>
         <h2 className="mt-4 text-2xl font-semibold text-foreground">Practice Test Complete!</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Your tutor has been emailed a full breakdown.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Download your full breakdown as a PDF report below.</p>
         <div className="mt-6 rounded-2xl bg-primary-soft p-6">
           <div className="text-xs font-medium uppercase tracking-wider text-accent-foreground">You scored</div>
           <div className="mt-1 text-5xl font-bold text-foreground">
@@ -546,8 +560,16 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
           Time remaining: {String(m).padStart(2, "0")}:{String(s).padStart(2, "0")}
         </div>
         <button
+          onClick={downloadPdf}
+          disabled={downloading}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-soft hover:bg-primary/90 disabled:opacity-60"
+        >
+          {downloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+          {downloading ? "Preparing PDF…" : "Download PDF Report"}
+        </button>
+        <button
           onClick={onClose}
-          className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-soft hover:bg-primary/90"
+          className="mt-2 inline-flex w-full items-center justify-center rounded-xl border border-border bg-background px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted"
         >
           Close
         </button>
@@ -555,3 +577,4 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
     </div>
   );
 }
+
