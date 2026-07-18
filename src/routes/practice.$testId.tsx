@@ -8,7 +8,7 @@ import { getTest, submitAttempt } from "@/lib/practice.functions";
 
 export const Route = createFileRoute("/practice/$testId")({
   head: ({ loaderData }) => {
-    const data = loaderData as LoaderData;
+    const data = loaderData as unknown as LoaderData;
     return {
       meta: [
         {
