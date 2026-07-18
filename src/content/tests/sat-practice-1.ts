@@ -18,8 +18,8 @@ const test: PracticeTest = {
     },
     {
       id: "q2",
-      prompt: "For the linear function k, the graph of y = k(x) in the xy-plane passes through the points (2, 11) and (5, 20). Which equation defines k?",
-      choices: { A: "k(x) = 3x + 5", B: "k(x) = 2x + 7", C: "k(x) = 5x + 1", D: "k(x) = 9x + 2" },
+      prompt: "Line k(x) = 4/3x + 5. j(x) is perpendicular to line k. What is the slope of line j(x)",
+      choices: { A: "-3/4", B: "3/4", C: "-4/3", D: "k(x) = 4/3" },
       correctAnswer: "A",
     },
     {
