@@ -145,15 +145,7 @@ export type Database = {
           total?: number | null
           tutor_email?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "test_attempts_test_id_fkey"
-            columns: ["test_id"]
-            isOneToOne: false
-            referencedRelation: "tests"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       tests: {
         Row: {
