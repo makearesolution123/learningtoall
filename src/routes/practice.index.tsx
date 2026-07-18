@@ -18,8 +18,11 @@ export const Route = createFileRoute("/practice/")({
   component: PracticeListPage,
 });
 
+type TestSummary = Awaited<ReturnType<typeof listTests>>[number];
+
 function PracticeListPage() {
-  const tests = Route.useLoaderData();
+  const tests = Route.useLoaderData() as TestSummary[];
+
 
   return (
     <div className="min-h-dvh bg-background">
