@@ -1,47 +1,69 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createFileRoute, useNavigate, notFound } from "@tanstack/react-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2, Download } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
-import { getActiveTest, submitAttempt } from "@/lib/practice.functions";
+import { getTest, submitAttempt } from "@/lib/practice.functions";
 
-export const Route = createFileRoute("/practice")({
-  head: () => ({
-    meta: [
-      { title: "SAT Practice Test — SAT Prep Studio" },
-      { name: "description", content: "Take a realistic timed SAT practice test with instant scoring and tutor reports." },
-    ],
-  }),
-  loader: async () => await getActiveTest(),
+export const Route = createFileRoute("/practice/$testId")({
+  head: ({ loaderData }) => {
+    const data = loaderData as unknown as LoaderData;
+    return {
+      meta: [
+        {
+          title: data
+            ? `${data.test.title} — Learning to All Tutoring`
+            : "Practice Test — Learning to All Tutoring",
+        },
+        {
+          name: "description",
+          content:
+            data?.test.description ??
+            "Take a realistic timed SAT practice test with instant scoring and a PDF report.",
+        },
+      ],
+    };
+  },
+
+  loader: async ({ params }) => {
+    const data = await getTest({ data: { testId: params.testId } });
+    if (!data) throw notFound();
+    return data;
+  },
+  notFoundComponent: () => (
+    <div className="min-h-dvh bg-background">
+      <SiteNav />
+      <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <h1 className="text-2xl font-semibold">Test not found</h1>
+        <p className="mt-2 text-muted-foreground">This practice test doesn't exist or isn't published.</p>
+      </main>
+    </div>
+  ),
+  errorComponent: ({ error }) => (
+    <div className="min-h-dvh bg-background">
+      <SiteNav />
+      <main className="mx-auto max-w-2xl px-4 py-24 text-center">
+        <h1 className="text-2xl font-semibold">Something went wrong</h1>
+        <p className="mt-2 text-muted-foreground">{error.message}</p>
+      </main>
+    </div>
+  ),
   component: PracticePage,
 });
 
-type LoaderData = Awaited<ReturnType<typeof getActiveTest>>;
+type LoaderData = Awaited<ReturnType<typeof getTest>>;
 type Question = NonNullable<LoaderData>["questions"][number];
 type Choice = "A" | "B" | "C" | "D";
 
 type Result = Awaited<ReturnType<typeof submitAttempt>>;
 
-
-const STORAGE_KEY = "sat-practice-state-v1";
+const STORAGE_KEY_PREFIX = "sat-practice-state-v2:";
 
 function PracticePage() {
-  const data = Route.useLoaderData();
+  const data = Route.useLoaderData() as NonNullable<LoaderData>;
   const navigate = useNavigate();
   const [phase, setPhase] = useState<"intro" | "test">("intro");
-
-  if (!data) {
-    return (
-      <div className="min-h-dvh bg-background">
-        <SiteNav />
-        <main className="mx-auto max-w-2xl px-4 py-24 text-center">
-          <h1 className="text-2xl font-semibold">No test available</h1>
-          <p className="mt-2 text-muted-foreground">Please check back later.</p>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-dvh bg-muted/30">
@@ -53,7 +75,7 @@ function PracticePage() {
           testId={data.test.id}
           durationSeconds={data.test.duration_seconds}
           questions={data.questions}
-          onDone={() => navigate({ to: "/" })}
+          onDone={() => navigate({ to: "/practice" })}
         />
       )}
     </div>
@@ -120,6 +142,7 @@ function TestRunner({
   onDone: () => void;
 }) {
   const submit = useServerFn(submitAttempt);
+  const storageKey = STORAGE_KEY_PREFIX + testId;
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Choice>>({});
   const [flagged, setFlagged] = useState<Set<string>>(new Set());
@@ -136,25 +159,20 @@ function TestRunner({
   // Restore
   useEffect(() => {
     try {
-      const raw = typeof window !== "undefined" ? localStorage.getItem(STORAGE_KEY) : null;
+      const raw = typeof window !== "undefined" ? localStorage.getItem(storageKey) : null;
       if (!raw) return;
       const s = JSON.parse(raw);
-      if (s.testId === testId) {
-        setAnswers(s.answers ?? {});
-        setFlagged(new Set(s.flagged ?? []));
-      }
+      setAnswers(s.answers ?? {});
+      setFlagged(new Set(s.flagged ?? []));
     } catch {}
-  }, [testId]);
+  }, [storageKey]);
 
   // Persist
   useEffect(() => {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({ testId, answers, flagged: [...flagged] }),
-      );
+      localStorage.setItem(storageKey, JSON.stringify({ answers, flagged: [...flagged] }));
     } catch {}
-  }, [testId, answers, flagged]);
+  }, [storageKey, answers, flagged]);
 
   const handleSubmit = useCallback(
     async (name: string, auto = false) => {
@@ -173,7 +191,7 @@ function TestRunner({
           },
         });
         setResult(res);
-        try { localStorage.removeItem(STORAGE_KEY); } catch {}
+        try { localStorage.removeItem(storageKey); } catch {}
       } catch (e) {
         submittedRef.current = false;
         toast.error((e as Error).message || "Failed to submit");
@@ -181,7 +199,7 @@ function TestRunner({
         setSubmitting(false);
       }
     },
-    [answers, flagged, remaining, submit, testId],
+    [answers, flagged, remaining, submit, testId, storageKey],
   );
 
   // Timer
@@ -225,7 +243,6 @@ function TestRunner({
   const answered = Object.keys(answers).length;
   const progressPct = Math.round(((index + 1) / questions.length) * 100);
 
-
   return (
     <div className="flex min-h-dvh flex-col">
       <TestHeader remaining={remaining} index={index} count={questions.length} answered={answered} />
@@ -254,6 +271,14 @@ function TestRunner({
               {flagged.has(q.id) ? "Flagged" : "Flag for review"}
             </button>
           </div>
+
+          {q.imageUrl && (
+            <img
+              src={q.imageUrl}
+              alt=""
+              className="mt-4 max-h-80 w-full rounded-2xl border border-border object-contain"
+            />
+          )}
 
           <h2 className="mt-4 text-lg font-medium leading-relaxed text-foreground sm:text-xl">{q.prompt}</h2>
 
@@ -410,7 +435,6 @@ function TestRunner({
           </div>
         </Modal>
       )}
-
 
       {confirmOpen && !result && (
         <Modal onClose={() => !submitting && setConfirmOpen(false)}>
@@ -577,4 +601,3 @@ function ResultModal({ result, onClose }: { result: Result; onClose: () => void 
     </div>
   );
 }
-
