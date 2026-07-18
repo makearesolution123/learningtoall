@@ -7,21 +7,25 @@ import { SiteNav } from "@/components/site-nav";
 import { getTest, submitAttempt } from "@/lib/practice.functions";
 
 export const Route = createFileRoute("/practice/$testId")({
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.test.title} — Learning to All Tutoring`
-          : "Practice Test — Learning to All Tutoring",
-      },
-      {
-        name: "description",
-        content:
-          loaderData?.test.description ??
-          "Take a realistic timed SAT practice test with instant scoring and a PDF report.",
-      },
-    ],
-  }),
+  head: ({ loaderData }) => {
+    const data = loaderData as LoaderData;
+    return {
+      meta: [
+        {
+          title: data
+            ? `${data.test.title} — Learning to All Tutoring`
+            : "Practice Test — Learning to All Tutoring",
+        },
+        {
+          name: "description",
+          content:
+            data?.test.description ??
+            "Take a realistic timed SAT practice test with instant scoring and a PDF report.",
+        },
+      ],
+    };
+  },
+
   loader: async ({ params }) => {
     const data = await getTest({ data: { testId: params.testId } });
     if (!data) throw notFound();
