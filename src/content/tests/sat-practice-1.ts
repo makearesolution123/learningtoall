@@ -25,7 +25,7 @@ const test: PracticeTest = {
     {
       id: "q3",
       prompt: "The function g is defined by the equation g(x) = x + 7/9. What is the value of g(x) when x = 2/9?",
-      choices: { A: "1", B: "9/9", C: "5/9", D: "1/9" },
+      choices: { A: "1", B: "3", C: "5/9", D: "1/9" },
       correctAnswer: "A",
     },
     {
@@ -38,19 +38,19 @@ const test: PracticeTest = {
       id: "q5",
       prompt: "What is the y-coordinate of the y-intercept of the graph of 2x/3 = -4y/5 + 12 in the xy-plane?",
       choices: { A: "12", B: "15", C: "18", D: "20" },
-      correctAnswer: "C",
+      correctAnswer: "B",
     },
     {
       id: "q6",
-      prompt: "What value of x is the solution to the equation 0.6x - 0.24 = 6(x - 0.04) + 1.2?",
+      prompt: "What value of x is the solution to the equation 0.6x - 0.12 = 6(x - 0.04) + 1.2?",
       choices: { A: "-0.2", B: "0.2", C: "1.2", D: "2" },
       correctAnswer: "A",
     },
     {
       id: "q7",
-      prompt: "For the function f, if f(2x) = x + 9 for all values of x, what is the value of f(10)?",
+      prompt: "For the function f, if f(x) = x + 9 for all values of x, what is the value of f(10)?",
       choices: { A: "5", B: "10", C: "14", D: "19" },
-      correctAnswer: "C",
+      correctAnswer: "D",
     },
     {
       id: "q8",
@@ -66,7 +66,7 @@ const test: PracticeTest = {
     },
     {
       id: "q10",
-      prompt: "2(3x - 4) - 9 = 3(x - 2) + 5. If x is the solution to the equation above, what is the value of x - 2?",
+      prompt: "2(3x - 4) - 9 = 3(x - 2) + 1. If x is the solution to the equation above, what is the value of x - 2?",
       choices: { A: "2", B: "4", C: "6", D: "8" },
       correctAnswer: "A",
     },
@@ -98,7 +98,7 @@ const test: PracticeTest = {
       id: "q15",
       prompt: "For the function q, if q(4x) = x - 5 for all values of x, what is the value of q(8)?",
       choices: { A: "-3", B: "-4", C: "-5", D: "3" },
-      correctAnswer: "B",
+      correctAnswer: "A",
     },
   ],
 };
