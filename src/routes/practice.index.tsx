@@ -3,7 +3,7 @@ import { Clock, FileText, ArrowRight } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { listTests } from "@/lib/practice.functions";
 
-export const Route = createFileRoute("/practice")({
+export const Route = createFileRoute("/practice/")({
   head: () => ({
     meta: [
       { title: "Practice Tests — Learning to All Tutoring" },
