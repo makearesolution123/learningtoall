@@ -36,7 +36,7 @@ function PracticeListPage() {
             Choose a practice test
           </h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Timed, realistic practice with instant scoring and a downloadable PDF report.
+            Timed, realistic practice with instant scoring and a downloadable PDF report. Please note that these should be done DURING your session.
           </p>
         </header>
 
