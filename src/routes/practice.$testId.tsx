@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2, Download } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
+import { DesmosCalculator } from "@/components/desmos-calculator";
 import { getTest, submitAttempt } from "@/lib/practice.functions";
 
 export const Route = createFileRoute("/practice/$testId")({
