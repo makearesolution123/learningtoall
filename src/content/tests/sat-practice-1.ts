@@ -7,7 +7,7 @@ const test: PracticeTest = {
   subject: "SAT Math",
   difficulty: "Easy",
   durationSeconds: 1200,
-  order: 1,
+  order: 4,
   published: true,
   questions: [
     {
