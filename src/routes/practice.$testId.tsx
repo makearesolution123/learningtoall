@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Clock, Flag, ChevronLeft, ChevronRight, X, CheckCircle2, Loader2, Download } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
+import { DesmosCalculator } from "@/components/desmos-calculator";
 import { getTest, submitAttempt } from "@/lib/practice.functions";
 
 export const Route = createFileRoute("/practice/$testId")({
@@ -246,6 +247,7 @@ function TestRunner({
   return (
     <div className="flex min-h-dvh flex-col">
       <TestHeader remaining={remaining} index={index} count={questions.length} answered={answered} />
+      {!result && <DesmosCalculator />}
 
       <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_280px]">
         <section className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
