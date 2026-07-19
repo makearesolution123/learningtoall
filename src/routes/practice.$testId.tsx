@@ -247,6 +247,7 @@ function TestRunner({
   return (
     <div className="flex min-h-dvh flex-col">
       <TestHeader remaining={remaining} index={index} count={questions.length} answered={answered} />
+      {!result && <DesmosCalculator />}
 
       <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_280px]">
         <section className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
