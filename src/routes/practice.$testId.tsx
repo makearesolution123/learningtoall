@@ -498,7 +498,7 @@ function TestHeader({
 }) {
   const m = Math.floor(remaining / 60);
   const s = remaining % 60;
-  const pct = Math.round(((index + 1) / count) * 100);
+  const pct = count > 0 ? Math.round((answered / count) * 100) : 0;
   const low = remaining <= 60;
   const warn = remaining <= 300;
   return (
