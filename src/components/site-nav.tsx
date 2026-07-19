@@ -16,6 +16,12 @@ export function SiteNav() {
 
         <nav className="hidden items-center gap-2 md:flex">
           <Link
+            to="/about"
+            className="inline-flex items-center rounded-xl px-4 py-2 text-sm font-medium text-foreground transition-all hover:bg-muted"
+          >
+            About Us
+          </Link>
+          <Link
             to="/practice"
             className="inline-flex items-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:bg-primary/90 hover:shadow-elevated"
           >
@@ -34,7 +40,14 @@ export function SiteNav() {
       </div>
       {open && (
         <div className="border-t border-border/60 bg-background md:hidden">
-          <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6">
+          <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 sm:px-6">
+            <Link
+              to="/about"
+              onClick={() => setOpen(false)}
+              className="block w-full rounded-xl px-4 py-2.5 text-center text-sm font-medium text-foreground hover:bg-muted"
+            >
+              About Us
+            </Link>
             <Link
               to="/practice"
               onClick={() => setOpen(false)}
