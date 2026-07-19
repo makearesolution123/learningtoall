@@ -47,7 +47,7 @@ export function DesmosCalculator() {
 
   // Initialize Desmos when opened
   useEffect(() => {
-    if (!open || minimized) return;
+    if (!open) return;
     let cancelled = false;
     loadDesmos()
       .then(() => {
@@ -61,7 +61,7 @@ export function DesmosCalculator() {
     return () => {
       cancelled = true;
     };
-  }, [open, minimized]);
+  }, [open]);
 
   // Clamp position within viewport on open/resize
   useEffect(() => {
