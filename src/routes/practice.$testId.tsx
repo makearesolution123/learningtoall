@@ -242,7 +242,7 @@ function TestRunner({
 
   const q = questions[index];
   const answered = Object.keys(answers).length;
-  const progressPct = Math.round(((index + 1) / questions.length) * 100);
+  const progressPct = questions.length > 0 ? Math.round((answered / questions.length) * 100) : 0;
 
   return (
     <div className="flex min-h-dvh flex-col">
