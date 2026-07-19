@@ -105,12 +105,12 @@ function AboutPage() {
           <p className="mx-auto mt-4 max-w-xl text-primary-foreground/90">
             Try a free SAT-style practice test and see how our approach can help you improve.
           </p>
-          <a
-            href="/practice"
+          <Link
+            to="/practice"
             className="mt-8 inline-flex items-center rounded-xl bg-primary-foreground px-6 py-3 text-sm font-semibold text-primary shadow-soft transition-all hover:bg-primary-foreground/90"
           >
             Take a Practice Test
-          </a>
+          </Link>
         </section>
       </main>
     </div>
