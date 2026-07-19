@@ -164,9 +164,11 @@ export function DesmosCalculator() {
               </button>
             </div>
           </div>
-          {!minimized && (
-            <div ref={calcElRef} className="h-full w-full flex-1" style={{ minHeight: 460 }} />
-          )}
+          <div
+            ref={calcElRef}
+            className="h-full w-full flex-1"
+            style={{ minHeight: minimized ? 0 : 460, display: minimized ? "none" : "block" }}
+          />
         </div>
       )}
     </>
