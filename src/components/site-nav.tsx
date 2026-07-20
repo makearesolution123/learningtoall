@@ -22,6 +22,12 @@ export function SiteNav() {
             About Us
           </Link>
           <Link
+            to="/get-a-tutor"
+            className="inline-flex items-center rounded-xl px-4 py-2 text-sm font-medium text-foreground transition-all hover:bg-muted"
+          >
+            Get a Tutor
+          </Link>
+          <Link
             to="/practice"
             className="inline-flex items-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft transition-all hover:bg-primary/90 hover:shadow-elevated"
           >
@@ -47,6 +53,13 @@ export function SiteNav() {
               className="block w-full rounded-xl px-4 py-2.5 text-center text-sm font-medium text-foreground hover:bg-muted"
             >
               About Us
+            </Link>
+            <Link
+              to="/get-a-tutor"
+              onClick={() => setOpen(false)}
+              className="block w-full rounded-xl px-4 py-2.5 text-center text-sm font-medium text-foreground hover:bg-muted"
+            >
+              Get a Tutor
             </Link>
             <Link
               to="/practice"

@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as GetATutorRouteImport } from './routes/get-a-tutor'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PracticeIndexRouteImport } from './routes/practice.index'
 import { Route as PracticeTestIdRouteImport } from './routes/practice.$testId'
 
+const GetATutorRoute = GetATutorRouteImport.update({
+  id: '/get-a-tutor',
+  path: '/get-a-tutor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -38,12 +44,14 @@ const PracticeTestIdRoute = PracticeTestIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/get-a-tutor': typeof GetATutorRoute
   '/practice/$testId': typeof PracticeTestIdRoute
   '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/get-a-tutor': typeof GetATutorRoute
   '/practice/$testId': typeof PracticeTestIdRoute
   '/practice': typeof PracticeIndexRoute
 }
@@ -51,26 +59,46 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/get-a-tutor': typeof GetATutorRoute
   '/practice/$testId': typeof PracticeTestIdRoute
   '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/practice/$testId' | '/practice/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/get-a-tutor'
+    | '/practice/$testId'
+    | '/practice/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/practice/$testId' | '/practice'
-  id: '__root__' | '/' | '/about' | '/practice/$testId' | '/practice/'
+  to: '/' | '/about' | '/get-a-tutor' | '/practice/$testId' | '/practice'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/get-a-tutor'
+    | '/practice/$testId'
+    | '/practice/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  GetATutorRoute: typeof GetATutorRoute
   PracticeTestIdRoute: typeof PracticeTestIdRoute
   PracticeIndexRoute: typeof PracticeIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/get-a-tutor': {
+      id: '/get-a-tutor'
+      path: '/get-a-tutor'
+      fullPath: '/get-a-tutor'
+      preLoaderRoute: typeof GetATutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -105,19 +133,10 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  GetATutorRoute: GetATutorRoute,
   PracticeTestIdRoute: PracticeTestIdRoute,
   PracticeIndexRoute: PracticeIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
