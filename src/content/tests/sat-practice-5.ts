@@ -1,6 +1,6 @@
 import type { PracticeTest } from "./types";
 const test: PracticeTest = {
-  id: "sat-practice-6",
+  id: "sat-practice-5",
   title: "SAT Problem Solving & Data Analysis Practice",
   description: "A 15-question practice test covering ratios and rates, percents, one- and two-variable data, probability, inference and margin of error, and evaluating statistical claims from Day 5",
   subject: "SAT Math",
