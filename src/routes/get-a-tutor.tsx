@@ -126,12 +126,12 @@ function GetATutorPage() {
           <p className="mx-auto mt-3 max-w-xl text-primary-foreground/90">
             Reach out and we'll be happy to answer any questions.
           </p>
-          <Link
-            to={CONTACT_CTA_HREF as string}
+          <a
+            href={CONTACT_CTA_HREF}
             className="mt-8 inline-flex items-center rounded-xl bg-primary-foreground px-6 py-3 text-sm font-semibold text-primary shadow-soft transition-all hover:bg-primary-foreground/90"
           >
             Contact Us
-          </Link>
+          </a>
         </section>
       </main>
     </div>
