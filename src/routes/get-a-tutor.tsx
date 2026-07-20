@@ -5,7 +5,7 @@ import { useState } from "react";
 
 // Replace with your actual Google Form embed URL (Send > Embed <> in Google Forms)
 // Replace with your actual Google Form embed URL (Send > Embed <> in Google Forms)
-const GOOGLE_FORM_EMBED_URL = "https://docs.google.com/forms/d/e/1FAIpQLSd9WvuXjOBxE5vRZQs1OuFlLmMZIiOQlTOr0Fv9pbUW47Rq1g/viewform?embedded=true";
+const GOOGLE_FORM_EMBED_URL: string = "https://docs.google.com/forms/d/e/1FAIpQLSd9WvuXjOBxE5vRZQs1OuFlLmMZIiOQlTOr0Fv9pbUW47Rq1g/viewform?embedded=true";
 // Change this to an email (mailto:) or a page path like "/contact"
 const CONTACT_CTA_HREF = "mailto:learningtoalltutoring@gmail.com";
 export const Route = createFileRoute("/get-a-tutor")({
