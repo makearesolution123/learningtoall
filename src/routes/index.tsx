@@ -16,12 +16,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const STATS = [
-  { value: "1570", label: "SAT Math Score" },
-  { value: "500+", label: "Tutoring Sessions" },
-  { value: "95%", label: "Student Satisfaction" },
-  { value: "200+", label: "Practice Tests Completed" },
-];
 
 const FEATURES = [
   {
@@ -59,7 +53,7 @@ const STEPS = [
 ];
 
 const FAQS = [
-  { question: "What subjects do you tutor?", answer: "We specialize in SAT prep — both Math and Reading & Writing — with deep focus on Desmos strategy for the digital SAT." },
+  { question: "What subjects do you tutor?", answer: "We specialize in SAT Math prep, with deep focus on Desmos strategy for the digital SAT." },
   { question: "How do the practice tests work?", answer: "Our practice tests are timed and mirror the real SAT. When you finish, you can download a detailed PDF report showing every question, your answer, and the correct answer." },
   { question: "Are tutoring sessions online or in person?", answer: "All sessions are 100% online, giving you flexible scheduling from anywhere." },
   { question: "How do I get matched with a tutor?", answer: "Fill out the short form on the Get a Tutor page. We'll review your request and reach out within 24 hours to match you with an available tutor." },
@@ -179,18 +173,6 @@ function Index() {
           </ol>
         </section>
 
-        {/* Social proof / stats */}
-        <section className="mt-24" aria-labelledby="stats-heading">
-          <h2 id="stats-heading" className="sr-only">Our results</h2>
-          <div className="grid gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-soft sm:grid-cols-2 sm:p-8 lg:grid-cols-4">
-            {STATS.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-4xl font-bold tracking-tight text-primary">{s.value}</div>
-                <div className="mt-1.5 text-sm text-muted-foreground">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* FAQ */}
         <section className="mx-auto mt-24 max-w-3xl" aria-labelledby="faq-heading">
