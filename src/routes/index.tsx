@@ -16,12 +16,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-const STATS = [
-  { value: "1570", label: "SAT Math Score" },
-  { value: "500+", label: "Tutoring Sessions" },
-  { value: "95%", label: "Student Satisfaction" },
-  { value: "200+", label: "Practice Tests Completed" },
-];
 
 const FEATURES = [
   {
